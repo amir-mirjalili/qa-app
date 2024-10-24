@@ -1,0 +1,3 @@
+local:
+  dialect: mysql
+  datasource: qa-game:123456@root(localhost:3306)/qa-game?parseTime=true
