@@ -46,7 +46,7 @@ func (u UserRepositoryImpl) Delete(userId int) {
 func (u UserRepositoryImpl) FindById(userId int) (user entity.User, err error) {
 	result := u.Db.Find(&user, userId)
 	if result == nil {
-		return user, errors.New("user not found")
+		return user, errors.New("user-validator not found")
 	}
 	return user, nil
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"qa-app/entity"
+	hashGenerator "qa-app/pkg/md5hash"
 	"qa-app/repository"
 	"qa-app/request/user"
 )
@@ -17,9 +18,10 @@ type UserServiceImpl struct {
 
 func (u UserServiceImpl) Create(user user.CreateUserRequest) {
 	userEntity := entity.User{
-		Name:     user.Name,
-		Password: user.Password,
-		Role:     user.Role,
+		Name:        user.Name,
+		Password:    hashGenerator.HashGenerator(user.Password),
+		PhoneNumber: user.PhoneNumber,
+		Role:        user.Role,
 	}
 	u.UserRepository.Save(userEntity)
 }
