@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gorm.io/gorm"
 	"qa-app/entity"
+	"qa-app/response"
 )
 
 type UserRepository interface {
@@ -11,7 +12,8 @@ type UserRepository interface {
 	Update(user entity.User)
 	Delete(userId int)
 	FindById(userId int) (user entity.User, err error)
-	FindAll() []entity.User
+	FindAll() []response.UserResponse
+	FindByPhone(phone string) (user entity.User, err error)
 }
 
 func NewUserRepositoryImpl(db *gorm.DB) UserRepository {
@@ -20,6 +22,14 @@ func NewUserRepositoryImpl(db *gorm.DB) UserRepository {
 
 type UserRepositoryImpl struct {
 	Db *gorm.DB
+}
+
+func (u UserRepositoryImpl) FindByPhone(phone string) (user entity.User, err error) {
+	result := u.Db.Where("phone_number= ?", phone).First(&user)
+	if result.Error != nil {
+		return user, errors.New("user not found")
+	}
+	return user, nil
 }
 
 func (u UserRepositoryImpl) Save(user entity.User) {
@@ -46,13 +56,13 @@ func (u UserRepositoryImpl) Delete(userId int) {
 func (u UserRepositoryImpl) FindById(userId int) (user entity.User, err error) {
 	result := u.Db.Find(&user, userId)
 	if result == nil {
-		return user, errors.New("user-validator not found")
+		return user, errors.New("user not found")
 	}
 	return user, nil
 }
 
-func (u UserRepositoryImpl) FindAll() []entity.User {
-	var users []entity.User
+func (u UserRepositoryImpl) FindAll() []response.UserResponse {
+	var users []response.UserResponse
 	u.Db.Find(&users)
 	return users
 }

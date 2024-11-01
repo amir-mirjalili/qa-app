@@ -14,5 +14,6 @@ func NewRouter(userController *controller.UserController) *gin.Engine {
 	userRouter := server.Group("/user")
 	userRouter.POST("", userController.Create)
 	userRouter.GET("", userController.FindAll)
+	userRouter.POST("/login", userController.Login)
 	return server
 }
